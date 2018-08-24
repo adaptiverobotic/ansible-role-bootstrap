@@ -108,7 +108,7 @@
 - name: install software with emerge
   raw: >
     equery l {{ bootstrap_emerge_packages }} ||
-    (emaint -a sync ; emerge -qkv {{ bootstrap_emerge_packages }}
+    (emaint -a sync ; emerge -qkv {{ bootstrap_emerge_packages }} &&
     echo "changed")
   when:
     - emerge.rc == 0
