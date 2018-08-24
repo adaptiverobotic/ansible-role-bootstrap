@@ -5,12 +5,11 @@
     port: "{{ ansible_port | default('22') }}"
     host: "{{ inventory_hostname }}"
   delegate_to: localhost
-  become: no
   when:
     - inventory_hostname is defined
     - ansible_connection is defined
     - ansible_connection != "docker"
-    - bootstrap_wait_for_host == true
+    - bootstrap_wait_for_host
 
 - name: register apk
   raw: apk --version
@@ -107,7 +106,10 @@
   retries: 3
 
 - name: install software with emerge
-  raw: equery l {{ bootstrap_emerge_packages }} || (emaint -a sync ; emerge -qkv {{ bootstrap_emerge_packages }} ; echo "changed")
+  raw: >
+    equery l {{ bootstrap_emerge_packages }} ||
+    (emaint -a sync ; emerge -qkv {{ bootstrap_emerge_packages }}
+    echo "changed")
   when:
     - emerge.rc == 0
   register: emergeresult
@@ -118,7 +120,9 @@
   retries: 3
 
 - name: install software with pacman
-  raw: pacman -Syu ; pacman -T {{ bootstrap_pacman_packages }} || pacman -S --noconfirm {{ bootstrap_pacman_packages }}
+  raw: >
+    pacman -Syu ; pacman -T {{ bootstrap_pacman_packages }} ||
+    pacman -S --noconfirm {{ bootstrap_pacman_packages }}
   when:
     - pacman.rc == 0
   register: pacmanresult
@@ -156,16 +160,21 @@
   become: no
 
 - name: load os-specific variables
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - default.yml
+  include_vars: "{{ lookup('first_found', distribution_files) }}"
+  vars:
+    distribution_files:
+      files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - default.yml
+      paths:
+        - vars
 
 - name: install software to support stable modules
   package:
     name: "{{ item }}"
-  with_items:
+    state: present
+  loop:
     - "{{ bootstrap_stable_packages }}"
   register: packagestableresult
   until: packagestableresult is succeeded
@@ -176,7 +185,8 @@
 - name: install software to support preview modules
   package:
     name: "{{ item }}"
-  with_items:
+    state: installed
+  loop:
     - "{{ bootstrap_preview_packages }}"
   when:
     - bootstrap_preview
