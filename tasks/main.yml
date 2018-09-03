@@ -18,7 +18,7 @@
       - "{{ item.assertion }}"
     msg: "{{ item.message }}"
   with_items:
-    - bootstrap_assert_rules
+    - "{{ bootstrap_assertion_rules }}"
 
 - name: register apk
   raw: apk --version
