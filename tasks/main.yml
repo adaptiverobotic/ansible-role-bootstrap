@@ -12,6 +12,14 @@
     - ansible_connection != "docker"
     - bootstrap_wait_for_host == true
 
+- name: assert variables
+  assert:
+    that:
+      - "{{ item.assertion }}
+  msg: "{{ item.message }}"
+  with_items:
+    - bootstrap_assert_rules
+
 - name: register apk
   raw: apk --version
   register: apk
