@@ -8,7 +8,7 @@ env:
     - ansible_previous="ansible>=2.5,<2.6"
     - ansible_current="ansible"
     - ansible_future="git+https://github.com/ansible/ansible.git@devel"
-  matrix:
+  env:
   - distro="alpine-latest"
   - distro="alpine-egde"
   - distro="archlinux"
