@@ -15,7 +15,7 @@
 - name: assert variables
   assert:
     that:
-      - "{{ item.assertion }}
+      - "{{ item.assertion }}"
     msg: "{{ item.message }}"
   with_items:
     - bootstrap_assert_rules
