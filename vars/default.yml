@@ -1,9 +1,9 @@
 ---
 # vars file for bootstrap
 bootstrap_assert_rules:
-  - assertion: bootstrap_user" is defined
+  - assertion: bootstrap_user is defined
     message: the bootstrap_user must be defined
-  - assertion: bootstrap_wait_for_host" is defined
+  - assertion: bootstrap_wait_for_host is defined
     message: the bootstrap_wait_for_host must be defined
   - assertion: bootstrap_wait_for_host | bool
     message: the bootstrap_wait_for_host variable must be a boolean (yes/true/1 or no/false/0)
