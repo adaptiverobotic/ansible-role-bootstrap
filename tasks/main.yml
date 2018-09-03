@@ -11,7 +11,6 @@
     msg: "{{ item.message }}"
   with_items:
     - "{{ bootstrap_assertion_rules }}"
-  delegate_to: localhost
 
 - name: wait for the host
   wait_for:
