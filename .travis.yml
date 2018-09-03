@@ -3,13 +3,15 @@ sudo: required
 language: python
 services: docker
 
-ansible_version:
+global:
   - ansible_previous="ansible>=2.5,<2.6"
   - ansible_current="ansible"
   - ansible_future="git+https://github.com/ansible/ansible.git@devel"
 
 env:
- - distro="alpine-latest"
+ - distro="alpine-latest" ansible_version="${ansible_previous}"
+ - distro="alpine-latest" ansible_version="${ansible_current}"
+ - distro="alpine-latest" ansible_version="${ansible_new}"
  - distro="alpine-egde"
  - distro="archlinux"
  - distro="centos-6"
