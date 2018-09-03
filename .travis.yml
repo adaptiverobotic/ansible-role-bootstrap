@@ -3,32 +3,32 @@ sudo: required
 language: python
 services: docker
 
+ansible_version:
+  - ansible_previous="ansible>=2.5,<2.6"
+  - ansible_current="ansible"
+  - ansible_future="git+https://github.com/ansible/ansible.git@devel"
+
 env:
-  global:
-    - ansible_previous="ansible>=2.5,<2.6"
-    - ansible_current="ansible"
-    - ansible_future="git+https://github.com/ansible/ansible.git@devel"
-  env:
-   - distro="alpine-latest"
-   - distro="alpine-egde"
-   - distro="archlinux"
-   - distro="centos-6"
-   - distro="centos-latest"
-   - distro="debian-latest"
-   - distro="debian-stable"
-   - distro="debian-unstable"
-   - distro="fedora-latest"
-   - distro="fedora-rawhide"
-   - distro="gentoo"
-   - distro="opensuse-leap"
-   - distro="opensuse-tumbleweed"
-   - distro="ubuntu-artful"
-   - distro="ubuntu-latest"
-   - distro="ubuntu-devel"
+ - distro="alpine-latest"
+ - distro="alpine-egde"
+ - distro="archlinux"
+ - distro="centos-6"
+ - distro="centos-latest"
+ - distro="debian-latest"
+ - distro="debian-stable"
+ - distro="debian-unstable"
+ - distro="fedora-latest"
+ - distro="fedora-rawhide"
+ - distro="gentoo"
+ - distro="opensuse-leap"
+ - distro="opensuse-tumbleweed"
+ - distro="ubuntu-artful"
+ - distro="ubuntu-latest"
+ - distro="ubuntu-devel"
 
 matrix:
   allow_failures:
-    global:
+    ansible_version:
       - ansible_future="git+https://github.com/ansible/ansible.git@devel"
     env:
       - distro="alpine-egde"
