@@ -1,5 +1,18 @@
 ---
 # tasks file for bootstrap
+- name: load default variables
+  include_vars:
+    file: default.yml
+
+- name: assert variables
+  assert:
+    that:
+      - "{{ item.assertion }}"
+    msg: "{{ item.message }}"
+  with_items:
+    - "{{ bootstrap_assertion_rules }}"
+  delegate_to: localhost
+
 - name: wait for the host
   wait_for:
     port: "{{ ansible_port | default('22') }}"
@@ -11,14 +24,6 @@
     - ansible_connection is defined
     - ansible_connection != "docker"
     - bootstrap_wait_for_host == true
-
-- name: assert variables
-  assert:
-    that:
-      - "{{ item.assertion }}"
-    msg: "{{ item.message }}"
-  with_items:
-    - "{{ bootstrap_assertion_rules }}"
 
 - name: register apk
   raw: apk --version
@@ -75,10 +80,6 @@
   failed_when: no
   become: no
   check_mode: no
-
-- name: load default variables
-  include_vars:
-    file: default.yml
 
 - name: install software with apk
   raw: apk update ; apk add {{ bootstrap_apk_packages }}
